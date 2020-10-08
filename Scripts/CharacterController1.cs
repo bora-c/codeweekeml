@@ -1,28 +1,72 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[RequireComponent(typeof(CharacterController))]
 
 public class CharacterController1 : MonoBehaviour
 {
-    private CharacterController m_Controller;
-    public float jumpHeight = 1f;
-    public float Speed = 1f;
+    public float walkingSpeed = 7.5f;
+    public float runningSpeed = 11.5f;
+    public float jumpSpeed = 8.0f;
+    public float gravity = 20.0f;
+    public Camera playerCamera;
+    public float lookSpeed = 2.0f;
+    public float lookXLimit = 45.0f;
 
-    void Awake()
+    CharacterController characterController;
+    Vector3 moveDirection = Vector3.zero;
+    float rotationX = 0;
+
+    [HideInInspector]
+    public bool canMove = true;
+
+    void Start()
     {
-        m_Controller = GetComponent<CharacterController>();
+        characterController = GetComponent<CharacterController>();
+
+        // mousu yok et mq
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
-    void FixedUpdate()
+    void Update()
     {
-        float HorizontalM = Input.GetAxisRaw("Horizontal");
-        float VerticalM = Input.GetAxisRaw("Vertical");
-        bool jumpbut = Input.GetButtonDown("Jump");
+        // axislere göre grounded'ken konumu yeniden hesapla
+        Vector3 forward = transform.TransformDirection(Vector3.forward);
+        Vector3 right = transform.TransformDirection(Vector3.right);
+        // Koşu
+        bool isRunning = Input.GetKey(KeyCode.LeftShift);
+        float curSpeedX = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Vertical") : 0;
+        float curSpeedY = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Horizontal") : 0;
+        float movementDirectionY = moveDirection.y;
+        moveDirection = (forward * curSpeedX) + (right * curSpeedY);
 
-        Vector3 moveD = (HorizontalM * transform.forward * Speed);
-        m_Controller.Move(moveD);
-
-        if(jumpbut == true)
+        if (Input.GetButton("Jump") && canMove && characterController.isGrounded)
         {
-            moveD += (jumpHeight * transform.up * 1);
+            moveDirection.y = jumpSpeed;
+        }
+        else
+        {
+            moveDirection.y = movementDirectionY;
+        }
+
+        // yerçekimini akselerasyon olarak uygula
+        if (!characterController.isGrounded)
+        {
+            moveDirection.y -= gravity * Time.deltaTime;
+        }
+
+        // hareket ettir
+        characterController.Move(moveDirection * Time.deltaTime);
+
+        // rotasyon mk
+        if (canMove)
+        {
+            rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
+            rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
+            playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+            transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
         }
     }
 }
