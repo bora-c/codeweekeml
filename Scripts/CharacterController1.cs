@@ -27,7 +27,7 @@ public class CharacterController1 : MonoBehaviour
     {
         characterController = GetComponent<CharacterController>();
 
-        // mousu yok et mq
+        // mousu yok et
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -43,7 +43,6 @@ public class CharacterController1 : MonoBehaviour
         float curSpeedY = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Horizontal") : 0;
         float movementDirectionY = moveDirection.y;
         moveDirection = (forward * curSpeedX) + (right * curSpeedY);
-        Vector3 temp = new Vector3(7.0f, 0, 0);
 
         if (Input.GetButton("Jump") && canMove && characterController.isGrounded)
         {
@@ -69,7 +68,7 @@ public class CharacterController1 : MonoBehaviour
             Debug.Log("hay amk basma"); 
         }
 
-            // rotasyon mk
+            // rotasyon
             if (canMove)
         {
             rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
