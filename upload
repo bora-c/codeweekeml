@@ -1,0 +1,10 @@
+#!/usr/bin/python3
+
+import os
+
+os.system("git add *")
+
+commit_name = input("commit: ")
+full_commit = 'git commit -m "' + commit_name + '"'
+#print(full_commit)
+os.system(full_commit)

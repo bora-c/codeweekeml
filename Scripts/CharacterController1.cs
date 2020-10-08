@@ -13,6 +13,8 @@ public class CharacterController1 : MonoBehaviour
     public Camera playerCamera;
     public float lookSpeed = 2.0f;
     public float lookXLimit = 45.0f;
+    public GameObject player;
+    public float crouchOffset = 5.0f;
 
     CharacterController characterController;
     Vector3 moveDirection = Vector3.zero;
@@ -41,6 +43,7 @@ public class CharacterController1 : MonoBehaviour
         float curSpeedY = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Horizontal") : 0;
         float movementDirectionY = moveDirection.y;
         moveDirection = (forward * curSpeedX) + (right * curSpeedY);
+        Vector3 temp = new Vector3(7.0f, 0, 0);
 
         if (Input.GetButton("Jump") && canMove && characterController.isGrounded)
         {
@@ -60,8 +63,14 @@ public class CharacterController1 : MonoBehaviour
         // hareket ettir
         characterController.Move(moveDirection * Time.deltaTime);
 
-        // rotasyon mk
-        if (canMove)
+        if (Input.GetKey(KeyCode.LeftControl)) 
+        {
+            playerCamera.transform.position = player.transform.position + crouchOffset;
+            Debug.Log("hay amk basma"); 
+        }
+
+            // rotasyon mk
+            if (canMove)
         {
             rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
             rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
