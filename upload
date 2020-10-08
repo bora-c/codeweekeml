@@ -8,4 +8,4 @@ commit_name = input("commit: ")
 full_commit = 'git commit -m "' + commit_name + '"'
 #print(full_commit)
 os.system(full_commit)
-os.system("git push")
+os.system("git push origin master")
