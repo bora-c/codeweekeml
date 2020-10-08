@@ -65,7 +65,7 @@ public class CharacterController1 : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftControl)) 
         {
             playerCamera.transform.position = player.transform.position + crouchOffset;
-            Debug.Log("hay amk basma"); 
+            Debug.Log("basmasana ctrl'ye :3"); 
         }
 
             // rotasyon
